@@ -1,0 +1,192 @@
+module game_win_anim(input clk, next, reset, output reg [3:0] sound1, sound2, output light1, light2, light3, light4, done);
+	
+	reg [4:0] state, nState;
+	
+	parameter A    = 4'b0000;
+	parameter B    = 4'b0001;
+	parameter C_s  = 4'b0010;
+	parameter D    = 4'b0011;
+	parameter E    = 4'b0100;
+	parameter F_s  = 4'b0101;
+	parameter G_s  = 4'b0110;
+	parameter A2   = 4'b0111;
+	parameter B2   = 4'b1000;
+	parameter C_s2 = 4'b1001;
+	parameter D2   = 4'b1010;
+	parameter E2   = 4'b1011;
+	parameter F_s2 = 4'b1100;
+	parameter G_s2 = 4'b1101;
+	parameter A3   = 4'b1110;
+	
+	initial begin
+		state <= 5'b11111;
+		sound1 <= 4'b0000;
+		sound2 <= 4'b0000;
+	end
+	
+	always @ (negedge clk) begin
+		
+		state <= nState;
+	
+	end
+	
+	always @ (*) begin
+		
+		if (~reset) begin
+			
+			if (next)
+				if (nState == 5'b11111)
+					nState = 5'b00000;
+				else
+					nState = state + 5'b00001;
+			else
+				nState = state;
+			
+			case (state)
+				5'b00000: begin          // MEASURE 1
+					sound1 = A2;
+					sound2 = C_s;
+				end 
+				5'b00001: begin
+					sound1 = A2;
+					sound2 = C_s;
+				end 
+				5'b00010: begin
+					sound1 = G_s;
+					sound2 = D;
+				end 
+				5'b00011: begin
+					sound1 = F_s;
+					sound2 = E;
+				end 
+				5'b00100: begin          // MEASURE 2
+					sound1 = F_s;
+					sound2 = D;
+				end 
+				5'b00101: begin
+					sound1 = F_s;
+					sound2 = D;
+				end 
+				5'b00110: begin
+					sound1 = E;
+					sound2 = B;
+				end 
+				5'b00111: begin
+					sound1 = E;
+					sound2 = B;
+				end 
+				5'b01000: begin          // MEASURE 3
+					sound1 = A2;
+					sound2 = A;
+				end 
+				5'b01001: begin
+					sound1 = A2;
+					sound2 = E;
+				end 
+				5'b01010: begin
+					sound1 = B2;
+					sound2 = G_s;
+				end 
+				5'b01011: begin
+					sound1 = B2;
+					sound2 = E;
+				end 
+				5'b01100: begin          // MEASURE 4
+					sound1 = C_s2;
+					sound2 = A2;
+				end 
+				5'b01101: begin
+					sound1 = C_s2;
+					sound2 = G_s;
+				end 
+				5'b01110: begin
+					sound1 = C_s2;
+					sound2 = F_s;
+				end 
+				5'b01111: begin
+					sound1 = C_s2;
+					sound2 = E;
+				end 
+				5'b10000: begin          // MEASURE 5
+					sound1 = B2;
+					sound2 = D;
+				end 
+				5'b10001: begin
+					sound1 = B2;
+					sound2 = C_s;
+				end 
+				5'b10010: begin
+					sound1 = C_s2;
+					sound2 = D;
+				end 
+				5'b10011: begin
+					sound1 = D2;
+					sound2 = A;
+				end 
+				5'b10100: begin         // MEASURE 6
+					sound1 = E2;
+					sound2 = C_s;
+				end 
+				5'b10101: begin
+					sound1 = E2;
+					sound2 = B;
+				end 
+				5'b10110: begin
+					sound1 = C_s2;
+					sound2 = A;
+				end 
+				5'b10111: begin
+					sound1 = C_s2;
+					sound2 = C_s;
+				end 
+				5'b11000: begin         // MEASURE 7
+					sound1 = B2;
+					sound2 = B;
+				end 
+				5'b11001: begin
+					sound1 = B2;
+					sound2 = C_s;
+				end 
+				5'b11010: begin
+					sound1 = F_s;
+					sound2 = D;
+				end 
+				5'b11011: begin
+					sound1 = C_s2;
+					sound2 = B;
+				end 
+				5'b11100: begin         //MEASURE 8
+					sound1 = B2;
+					sound2 = E;
+				end 
+				5'b11101: begin
+					sound1 = B2;
+					sound2 = D;
+				end 
+				5'b11110: begin
+					sound1 = B2;
+					sound2 = C_s;
+				end 
+				5'b11111: begin
+					sound1 = B2;
+					sound2 = B;
+				end 
+			endcase
+			
+		end
+		else begin
+			nState = 5'b11111;
+			sound1 = 4'b0000;
+			sound2 = 4'b0000;
+		end
+		
+	end
+	
+	assign light1 = state[0];
+	assign light2 = state[0];
+	assign light3 = state[0];
+	assign light4 = state[0];
+	
+	assign done = (state == 5'b11111);
+
+endmodule 
